@@ -6,16 +6,20 @@ let barWidth = (svgWidth / dataset.length);
 let svg = d3.select('svg')
             .attr('width', svgWidth)
             .attr('height', svgHeight);
+
+let yScale = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([0, svgHeight]);
     
 let barChart = svg.selectAll('rect')
                 .data(dataset)
                 .enter()
                 .append('rect')
                 .attr('y', (d) => {
-                    return svgHeight - d;
+                    return svgHeight - yScale(d) + 20;
                 })
                 .attr('height', (d) => {
-                    return d;
+                    return yScale(d) - 20;
                 })
                 .attr('width', barWidth - barPadding)
                 .attr('transform', (d, i) => {
@@ -28,7 +32,7 @@ let text = svg.selectAll('text')
             .enter()
             .append('text')
             .attr('y', (d) => {
-                return svgHeight - d - 3;
+                return svgHeight - yScale(d) + 15;
             })
             .attr('x', (d, i) => {
                 return (barWidth * i) + 15;
